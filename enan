@@ -10,9 +10,9 @@ local reactors = {}
 
 function call(name, ...)
   for k, v in pairs(reactors) do
-    ret = v[name](...)
+    ret = table.pack(v[name](...))
 
-    if ret ~= nil then
+    if ret.n > 0 then
       return ret
     end
   end
@@ -392,7 +392,7 @@ function reactor_register()
         if reactor == nil then
           reactor = setmetatable({}, {__index=function(table, key)
             return function(...)
-              return call(key, ...)
+              return table.unpack(call(key, ...))
             end
           end})
         end
