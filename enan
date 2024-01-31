@@ -18,11 +18,7 @@ function call(name, ...)
   end
 end
 
-local reactor = setmetatable({}, {__index=function(table, key)
-  return function(...)
-    return call(key, ...)
-  end
-end})
+local reactor
 local reactorlasers = {}
 
 local reactor_mode = 0
@@ -37,7 +33,7 @@ function reactor_read(parData)
 end
 
 function reactor_boot()
-  if reactor.interfaced() ~= nil then
+  if reactor ~= nil then
     w.writeLn("Booting Reactor...")
     local  _, _, _, strMode, _ = reactor.state()
     if strMode == "off" then
@@ -211,7 +207,7 @@ function reactor_setMode()
   elseif reactor_rate > 100000 then
     reactor_rate = 100000
   end
-  if reactor.interfaced() ~= nil then
+  if reactor ~= nil then
     if reactor_mode == 0 then
       reactor.release(false)
     elseif reactor_mode == 1 then
@@ -230,7 +226,7 @@ function reactor_setLaser()
   elseif reactor_laserAmount > 100000 then
     reactor_laserAmount = 100000
   end
-  if reactor.interfaced() ~= nil then
+  if reactor ~= nil then
     reactor_laserAmount = reactor.stabilizerEnergy(reactor_laserAmount)
   end
 end
@@ -241,20 +237,20 @@ function reactor_setTargetStability()
   elseif reactor_targetStability > 100.0 then
     reactor_targetStability = 100.0
   end
-  if reactor.interfaced() ~= nil then
+  if reactor ~= nil then
     reactor_targetStability = 100.0 - reactor.instabilityTarget(100.0 - reactor_targetStability)
   end
 end
 
 function reactor_start()
-  if reactor.interfaced() ~= nil then
+  if reactor ~= nil then
     reactor_setMode()
     reactor.enable(true)
   end
 end
 
 function reactor_stop()
-  if reactor.interfaced() ~= nil then
+  if reactor ~= nil then
     reactor.enable(false)
   end
 end
@@ -393,6 +389,15 @@ function reactor_register()
       function(deviceType, address, wrap)
         table.insert(reactors, wrap)
       end,
+
+      if reactor == nil then
+        reactor = setmetatable({}, {__index=function(table, key)
+          return function(...)
+            return call(key, ...)
+          end
+        end})
+      end
+
       function() end)
   w.device_register("warpdriveEnanReactorLaser",
       function(deviceType, address, wrap) table.insert(reactorlasers, { side = wrap.side(), wrap = wrap }) end,
