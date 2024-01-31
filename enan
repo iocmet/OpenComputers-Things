@@ -390,9 +390,9 @@ function reactor_register()
         table.insert(reactors, wrap)
 
         if reactor == nil then
-          local temp = {}
+          local reactor = {}
 
-          reactor = temp.__index = function(table, key)
+          reactor.__index = function(table, key)
             return function(...)
               return table.unpack(call(key, ...))
             end
