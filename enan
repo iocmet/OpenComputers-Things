@@ -390,13 +390,11 @@ function reactor_register()
         table.insert(reactors, wrap)
 
         if reactor == nil then
-          local reactor = {}
-
-          reactor.__index = function(table_, key)
+          reactor = setmetatable({}, {__index = function(table_, key)
             return function(...)
               return table.unpack(call(key, ...))
             end
-          end
+          end})
         end
       end,
       function() end)
