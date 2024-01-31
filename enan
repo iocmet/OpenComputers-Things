@@ -388,16 +388,15 @@ function reactor_register()
   w.device_register("warpdriveEnanReactorCore",
       function(deviceType, address, wrap)
         table.insert(reactors, wrap)
+
+        if reactor == nil then
+          reactor = setmetatable({}, {__index=function(table, key)
+            return function(...)
+              return call(key, ...)
+            end
+          end})
+        end
       end,
-
-      if reactor == nil then
-        reactor = setmetatable({}, {__index=function(table, key)
-          return function(...)
-            return call(key, ...)
-          end
-        end})
-      end
-
       function() end)
   w.device_register("warpdriveEnanReactorLaser",
       function(deviceType, address, wrap) table.insert(reactorlasers, { side = wrap.side(), wrap = wrap }) end,
