@@ -268,7 +268,8 @@ local reactor_pulseStep = 0
 function reactor_pulse(output)
   reactor_output = output
   if reactor == nil or reactor.interfaced() == nil then
-    w.reboot()
+    --w.reboot()
+    return
   end
   local instabilities = { reactor.instability() }
   reactor_pulseStep = (reactor_pulseStep + 1) % 6
