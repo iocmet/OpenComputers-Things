@@ -6,6 +6,8 @@ local data
 
 ----------- Reactor support
 
+local reactors = {}
+
 function call(name, ...)
   for k, v in pairs(reactors) do
     ret = v[name](...)
@@ -16,12 +18,11 @@ function call(name, ...)
   end
 end
 
-local reactors = {}
 local reactor = setmetatable({}, {__index=function(table, key)
   return function(...)
     return call(key, ...)
   end
-end}
+end})
 local reactorlasers = {}
 
 local reactor_mode = 0
