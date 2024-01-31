@@ -392,7 +392,7 @@ function reactor_register()
         if reactor == nil then
           local reactor = {}
 
-          reactor.__index = function(table, key)
+          reactor.__index = function(table_, key)
             return function(...)
               return table.unpack(call(key, ...))
             end
