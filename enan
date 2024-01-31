@@ -37,7 +37,7 @@ function reactor_read(parData)
 end
 
 function reactor_boot()
-  if reactor ~= nil then
+  if reactor.interfaced ~= nil and reactor.interfaced() ~= nil then
     w.writeLn("Booting Reactor...")
     local  _, _, _, strMode, _ = reactor.state()
     if strMode == "off" then
@@ -211,7 +211,7 @@ function reactor_setMode()
   elseif reactor_rate > 100000 then
     reactor_rate = 100000
   end
-  if reactor ~= nil then
+  if reactor.interfaced ~= nil and reactor.interfaced() ~= nil then
     if reactor_mode == 0 then
       reactor.release(false)
     elseif reactor_mode == 1 then
@@ -230,7 +230,7 @@ function reactor_setLaser()
   elseif reactor_laserAmount > 100000 then
     reactor_laserAmount = 100000
   end
-  if reactor ~= nil then
+  if reactor.interfaced ~= nil and reactor.interfaced() ~= nil then
     reactor_laserAmount = reactor.stabilizerEnergy(reactor_laserAmount)
   end
 end
@@ -241,20 +241,20 @@ function reactor_setTargetStability()
   elseif reactor_targetStability > 100.0 then
     reactor_targetStability = 100.0
   end
-  if reactor ~= nil then
+  if reactor.interfaced ~= nil and reactor.interfaced() ~= nil then
     reactor_targetStability = 100.0 - reactor.instabilityTarget(100.0 - reactor_targetStability)
   end
 end
 
 function reactor_start()
-  if reactor ~= nil then
+  if reactor.interfaced ~= nil and reactor.interfaced() ~= nil then
     reactor_setMode()
     reactor.enable(true)
   end
 end
 
 function reactor_stop()
-  if reactor ~= nil then
+  if reactor.interfaced ~= nil and reactor.interfaced() ~= nil then
     reactor.enable(false)
   end
 end
